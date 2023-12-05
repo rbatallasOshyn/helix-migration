@@ -1,0 +1,66 @@
+﻿<!--https://github.com/RazorGenerator/RazorGenerator/issues/211-->
+<!--System.Web.Mvc this line only exists so that razorgenerator picks this up as an mvc project -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+	  <ApplicationIcon />
+	  <OutputType>Library</OutputType>
+	  <StartupObject />
+	  <Authors>Neil Shack</Authors>
+	  <Company>Ethisys Ltd</Company>
+  </PropertyGroup>
+   <ItemGroup>
+    <ProjectCapability Include="SupportsSystemWeb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Views\web.config" />
+    <Content Remove="Web.config" />
+    <Content Remove="Web.Debug.config" />
+    <Content Remove="Web.Release.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="App_Config\Include\Feature\Feature.Hero.Mvc.config" />
+    <None Remove="App_Config\Include\Feature\Feature.Hero.RegisterContainer.config" />
+    <None Remove="App_Config\Include\Feature\Feature.Hero.RegisterMappings.config" />
+    <None Remove="App_Config\Include\Feature\Feature.Hero.Routes.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Config\Include\Feature\Feature.Hero.Mvc.config" />
+    <Content Include="App_Config\Include\Feature\Feature.Hero.RegisterContainer.config" />
+    <Content Include="App_Config\Include\Feature\Feature.Hero.RegisterMappings.config" />
+    <Content Include="App_Config\Include\Feature\Feature.Hero.Routes.config" />
+    <Content Include="Views\Hero\Hero.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Views\web.config" />
+    <None Include="Web.config" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Glass.Mapper.Sc.103.Core" />
+    <PackageReference Include="Glass.Mapper.Sc.103.Mvc" />
+    <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" />
+    <PackageReference Include="RazorGenerator.MsBuild" >
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Sitecore.ContentSearch.Linq" />
+    <PackageReference Include="Sitecore.Kernel" />
+    <PackageReference Include="Sitecore.Mvc" />
+    <PackageReference Include="Sitecore.Mvc.Analytics" />
+    <PackageReference Include="System.ComponentModel.Annotations" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Foundation\Content\website\Helixbase.Foundation.Content.csproj" />
+    <ProjectReference Include="..\..\..\Foundation\Core\website\Helixbase.Foundation.Core.csproj" />
+    <ProjectReference Include="..\..\..\Foundation\DI\website\Helixbase.Foundation.DI.csproj" />
+    <ProjectReference Include="..\..\..\Foundation\Logging\website\Helixbase.Foundation.Logging.csproj" />
+    <ProjectReference Include="..\..\..\Foundation\ORM\website\Helixbase.Foundation.ORM.csproj" />
+    <ProjectReference Include="..\..\..\Foundation\Search\website\Helixbase.Foundation.Search.csproj" />
+  </ItemGroup>
+</Project>
