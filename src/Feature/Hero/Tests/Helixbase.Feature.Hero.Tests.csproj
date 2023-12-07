@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <Authors>Neil Shack</Authors>
+    <Company>Ethisys Ltd</Company>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoFixture" />
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Glass.Mapper.Sc.103.Core" />
+    <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform"/>
+    <PackageReference Include="MSTest.TestAdapter" />
+    <PackageReference Include="MSTest.TestFramework" />
+    <PackageReference Include="NSubstitute" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Foundation\Core\website\Helixbase.Foundation.Core.csproj" />
+    <ProjectReference Include="..\website\Helixbase.Feature.Hero.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+</Project>
