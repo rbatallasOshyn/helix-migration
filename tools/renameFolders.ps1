@@ -7,8 +7,7 @@ Param(
 
 $excludedFoldersRegex = "\\(obj|bin|.git|.hg)\\?"
 
-function Update-FileContent
-{
+function Update-FileContent {
     Param(
         [Parameter(Position=0, Mandatory=$true)]
         [string]$StartPath,
@@ -38,8 +37,7 @@ function Update-FileContent
 
 
 
-function buildVS
-{
+function buildVS {
     param
     (
         [parameter(Mandatory=$true)]
@@ -53,7 +51,7 @@ function buildVS
     )
     process
     {
-        $msBuildExe = 'C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe'
+        $msBuildExe = 'C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\Bin\msbuild.exe'
 
         if ($nuget) {
             Write-Host "Restoring NuGet packages" -foregroundcolor green
@@ -66,13 +64,38 @@ function buildVS
         }
 
         Write-Host "Building $($path)" -foregroundcolor green
-        & "$($msBuildExe)" "$($path)" /t:Build /m
+        & "$($msBuildExe)" "$($path)" /t:Build /property:Configuration=Debug /m
     }
+}
+
+function BuildSolution{
+
+    param(
+        [parameter(Mandatory=$true)]
+        [String] $path
+    )
+
+    $buildResult = Invoke-MsBuild -Path $path
+
+    if ($buildResult.BuildSucceeded -eq $true)
+    {
+      Write-Output ("Build completed successfully in {0:N1} seconds." -f $buildResult.BuildDuration.TotalSeconds)
+    }
+    elseif ($buildResult.BuildSucceeded -eq $false)
+    {
+      Write-Output ("Build failed after {0:N1} seconds. Check the build log file '$($buildResult.BuildLogFilePath)' for errors." -f $buildResult.BuildDuration.TotalSeconds)
+    }
+    elseif ($null -eq $buildResult.BuildSucceeded)
+    {
+      Write-Output "Unsure if build passed or failed: $($buildResult.Message)"
+    }
+
+
 }
 
 
 
-function Modify-Folder-Structure{
+function Modify-Folder-Structure {
 
     Write-Host "Updating folder structure" -ForegroundColor Magenta
 
@@ -86,23 +109,18 @@ function Modify-Folder-Structure{
 
     $childFolders | ForEach-Object {
         $currentFolder = (Get-Item  $_.FullName )
-
-        Write-Host $currentFolder
         
         $intDirSecLvl = Get-ChildItem -Directory $currentFolder 
 
         $intDirSecLvl | ForEach-Object{
             $currentFolderSecLvl = (Get-Item  $_.FullName )
-        
-            Write-Host $currentFolderSecLvl
 
             $intDirThirdLvl = Get-ChildItem -Directory $currentFolderSecLvl | Where-Object {$_.FullName -match $InternalFoldersToModify}
 
             $intDirThirdLvl | ForEach-Object {
 
                 $currentFolderThirdLvl = (Get-Item  $_.FullName )
-                Write-Host $currentFolderThirdLvl
-
+                
                 Write-Host "Folder name before rename: $($OldCodeFolderName)"  -ForegroundColor Yellow
         
                 $currentFolderThirdLvl | Rename-Item -NewName{
@@ -111,10 +129,7 @@ function Modify-Folder-Structure{
 
                     $_.Name -replace $OldCodeFolderName, $newItemName
 
-
                 } -Force
-
-                
                 
                 Write-Host "Folder name after rename: $($NewCodeFolderName)"    -ForegroundColor Green
 
@@ -137,7 +152,7 @@ try{
 
     $oldNamespacePrefix = $OldCodeFolderName
     $newNamespacePrefix = $NewCodeFolderName
-    #$solutionPath = $startPath+"\"+$SolutionName+".sln"
+    $solutionPath = Get-ChildItem -File -Path $startPath -Force | Where-Object { ( $_.FullName -match $fileExtensionsToUpdateContentRegex) } | Select-Object -ExpandProperty FullName
 
 
     Write-Host "Update folder structure" -ForegroundColor Magenta
@@ -148,9 +163,9 @@ try{
 
     Update-FileContent -StartPath "$startPath" -OldValue $oldNamespacePrefix -NewValue $newNamespacePrefix -FileExtensionsRegex $fileExtensionsToUpdateContentRegex
 
-    #Write-Host $solutionPath
+    #buildVS -path $solutionPath -nuget $false -clean $false
 
-    #buildVS -path $solutionPath -nuget $true -clean $true
+    #BuildSolution -path $solutionPath
 
     Write-Host "Done" -ForegroundColor Green
 
